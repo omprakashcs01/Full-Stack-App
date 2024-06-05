@@ -4,16 +4,18 @@ import InputBox from "../../components/InputBox";
 import SubmitButton from "../../components/SubmitButton";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-const Register = ({  }) => {
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const Register = ({}) => {
   // states
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   //function
-  // btn funcn
+  // btn FUNCTION
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -22,13 +24,14 @@ const Register = ({  }) => {
         setLoading(false);
         return;
       }
+
       setLoading(false);
-      const { data } = await axios.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
-      alert(data && data.message);
+      const { data } = await axios.post(
+        "http://192.168.56.1:8080/api/v1/auth/register",
+        { name, email, password }
+      );
+      Alert.alert(data && data.message);
+      await AsyncStorage.setItem("@auth", JSON.stringify(data));
       navigation.navigate("Login");
       console.log("Register Data==> ", { name, email, password });
     } catch (error) {
@@ -37,6 +40,13 @@ const Register = ({  }) => {
       console.log(error);
     }
   };
+
+  //temp
+  const getLocalStorage = async () => {
+    let data = await AsyncStorage.getItem("@auth");
+    console.log("localStorage =>>>", data);
+  };
+  getLocalStorage();
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>Register</Text>

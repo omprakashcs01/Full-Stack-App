@@ -7,10 +7,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 const Login = ({}) => {
-  //global state
-  // const [state, setState] = useContext(AuthContext);
-
-  // states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,12 +22,13 @@ const Login = ({}) => {
         setLoading(false);
         return;
       }
-      setLoading(false);
-      const { data } = await axios.post("/auth/login", { email, password });
-      setState(data);
+      const { data } = await axios.post(
+        "http://192.168.56.1:8080/api/v1/auth/login",
+        { email, password }
+      );
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
       alert(data && data.message);
-      navigation.navigate("Home");
+
       console.log("Login Data==> ", { email, password });
     } catch (error) {
       alert(error.response.data.message);
@@ -39,12 +36,7 @@ const Login = ({}) => {
       console.log(error);
     }
   };
-  //temp function to check local storage data
-  const getLocalStorageData = async () => {
-    let data = await AsyncStorage.getItem("@auth");
-    console.log("Local Storage ==> ", data);
-  };
-  getLocalStorageData();
+
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>Login</Text>
