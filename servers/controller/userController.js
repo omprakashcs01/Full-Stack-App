@@ -1,4 +1,5 @@
-const { hashPassword } = require("../helper/authHelper");
+const JWT = require("jsonwebtoken");
+const { hashPassword, comparePassword } = require("../helper/authHelper");
 const userModel = require("../model/userModel");
 
 const registerController = async (req, res) => {
@@ -63,4 +64,69 @@ const registerController = async (req, res) => {
   }
 };
 
-module.exports = { registerController };
+//Login Controller
+const loginController = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    //validation for email and password
+
+    if (!email || !password) {
+      return res.status(403).send({
+        success: false,
+        message: "Please provide a valid email and password",
+      });
+    }
+
+    //find User
+
+    const user = await userModel.findOne({ email: email });
+
+    if (!user) {
+      return res.status(500).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    //match password
+
+    const match = await comparePassword(password, user.password);
+
+    if (!match) {
+      return res.status(500).send({
+        success: false,
+        message: "Invalid  username or password",
+      });
+    }
+
+    // JWT token 
+
+    const token = await JWT.sign(
+      { _id: user._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    //undenied password
+    user.password = undefined;
+
+    //user login successfully
+    res.status(200).send({
+      success: true,
+      message: "Login successfully completed",
+      token,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      success: false,
+      message: "Error In Login API",
+    });
+  }
+};
+
+module.exports = { registerController, loginController };
