@@ -6,12 +6,18 @@ import SubmitButton from "../../components/SubmitButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../../context/authContext";
+
 const Login = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
+
+  //global state
+  const [state, setState] = useContext(AuthContext);
+
   //function
   // btn funcn
   const handleSubmit = async () => {
@@ -28,7 +34,8 @@ const Login = ({}) => {
       );
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
       alert(data && data.message);
-
+       setState(data)
+      navigation.navigate("Home");
       console.log("Login Data==> ", { email, password });
     } catch (error) {
       alert(error.response.data.message);
