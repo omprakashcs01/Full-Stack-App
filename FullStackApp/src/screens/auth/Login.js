@@ -29,7 +29,7 @@ const Login = ({}) => {
         return;
       }
       const { data } = await axios.post(
-        "http://192.168.56.1:8080/api/v1/auth/login",
+        "/auth/login",
         { email, password }
       );
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
