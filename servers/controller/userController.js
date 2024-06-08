@@ -1,6 +1,13 @@
 const JWT = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../helper/authHelper");
 const userModel = require("../model/userModel");
+var { expressjwt: jwt } = require("express-jwt");
+
+//middleware
+const requireSignIn = jwt({
+  secret: process.env.JWT_SECRET_KEY,
+  algorithms: ["HS256"],
+});
 
 const registerController = async (req, res) => {
   try {
@@ -169,4 +176,9 @@ const updateController = async (req, res) => {
   }
 };
 
-module.exports = { registerController, loginController, updateController };
+module.exports = {
+  registerController,
+  loginController,
+  updateController,
+  requireSignIn,
+};

@@ -16,7 +16,7 @@ import axios from "axios";
 
 const Account = () => {
   const [state, setState] = useContext(AuthContext);
-
+  const { user, token } = state;
   const [name, setName] = useState(state?.user.name);
   const [email] = useState(state?.user.email);
   const [password, setPassword] = useState(state?.user.password);
@@ -24,11 +24,15 @@ const Account = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.put(`/auth/update`, {
-        name,
-        password,
-        email,
-      });
+      const { data } = await axios.put(
+        `/auth/update`,
+        {
+          name,
+          password,
+          email,
+        },
+      
+      );
       setLoading(false);
       let updatedData = JSON.stringify(data);
       setState({ ...state, user: updatedData?.updatedUser });
