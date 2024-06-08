@@ -15,13 +15,13 @@ const AuthProvider = ({ children }) => {
 
   //default axios settings
 
-  axios.defaults.baseURL ="http://192.168.56.1:8080/api/v1"
+  axios.defaults.baseURL = "http://192.168.56.1:8080/api/v1";
 
   //initial local strong data
   const loadLocalStorageData = async () => {
     let data = await AsyncStorage.getItem("@auth");
     let loginData = JSON.parse(data);
-    setState({ ...state, user: data?.user, token: data?.token });
+    setState({ ...state, user: loginData?.user, token: loginData?.token });
     return loginData;
   };
 
