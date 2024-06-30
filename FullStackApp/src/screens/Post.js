@@ -20,23 +20,23 @@ const Post = () => {
 
   const navigate = useNavigation();
   const handleCreatePost = async () => {
-    setLoading(true);
-    try {
-      if (!title || !description) {
-        alert("Please enter a title and description");
-      }
+    if (!title || !description) {
+      return alert("Please enter a title and description");
+    }
 
-      const { data } = await axios.post("/post/create-post", {
+    setLoading(true);
+
+    try {
+      const response = await axios.post("/post/create-post", {
         title,
         description,
       });
-      setLoading(false);
-
-      alert(data?.message);
+      alert(response.data?.message);
       navigate.navigate("Home");
     } catch (error) {
       console.log(error);
       alert(error.message);
+    } finally {
       setLoading(false);
     }
   };
