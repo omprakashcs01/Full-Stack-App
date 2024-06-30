@@ -24,13 +24,8 @@ app.use(morgan("dev"));
 
 //ROUTES
 
-
-app.use("/api/v1/auth", require("./routes/userRoutes"))
-
-
-
-
-
+app.use("/api/v1/auth", require("./routes/userRoutes"));
+app.use("/api/v1/post", require("./routes/postRoutes"));
 
 // default routes
 // app.use("", (req, res) => {
@@ -39,12 +34,6 @@ app.use("/api/v1/auth", require("./routes/userRoutes"))
 //     message: "Welcome to Full Stack App",
 //   });
 // });
-
-
-
-
-
-
 
 //port
 const PORT = process.env.PORT || 8081;
